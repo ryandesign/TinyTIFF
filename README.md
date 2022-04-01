@@ -2,16 +2,16 @@
 
 (c) 2014-2020 by Jan W. Krieger
 
-This is a lightweight C/C++ library, which is able to read and write basic TIFF
+This is a lightweight C/C++ library which is able to read and write basic TIFF
 files. It is significantly faster than libTIFF, especially in writing large
 multi-frame TIFFs.
 
-This software is licensed under the term of the [GNU Lesser General Public License 3.0 
+This software is licensed under the terms of the [GNU Lesser General Public License 3.0 
 (LGPL 3.0)](https://raw.githubusercontent.com/jkriege2/TinyTIFF/master/LICENSE). 
 
 
 ![Language](https://img.shields.io/github/languages/top/jkriege2/TinyTIFF)
-[![Lates Release](https://img.shields.io/github/v/release/jkriege2/TinyTIFF)](https://github.com/jkriege2/TinyTIFF/releases)
+[![Latest Release](https://img.shields.io/github/v/release/jkriege2/TinyTIFF)](https://github.com/jkriege2/TinyTIFF/releases)
 [![Documentation](https://img.shields.io/badge/documentation-online-blue)](http://jkriege2.github.io/TinyTIFF/)
 
 
@@ -22,17 +22,17 @@ This software is licensed under the term of the [GNU Lesser General Public Licen
 
 # TinyTIFFReader
 
-## Basiscs 
+## Basics 
 
-The methods in this file allow to read TIFF files with limited capabilites, but very fast (comapred to libtiff) and also more frames from a multi-frame TIFF than libtiff (which is currently limited to 65535 frames due to internal data sizes!).
+The methods in this library allow to read TIFF files with limited capabilites, but very fast (compared to libTIFF) and also more frames from a multi-frame TIFF than libtiff (which is currently limited to 65535 frames due to internal data sizes).
    
-This library currently support TIFF files, which meet the following criteria:
-* TIFF-only (no BigTIFF), i.e. max. 4GB
+This library currently support TIFF files which meet the following criteria:
+* TIFF only (no BigTIFF), i.e. max. 4GB
 * uncompressed frames
-* one, or more samples per frame
-* data types: UINT, INT, FLOAT, 8-64bit
-* planar and chunky data organization, for multi-sample data
-* no suppoer for palleted images
+* one or more samples per frame
+* data types: UINT, INT, FLOAT, 8-, 16-, 32-, or 64-bit
+* planar and chunky data organization for multi-sample data
+* no support for palleted images
 * stripped TIFFs only, tiling is not supported
 
 ## Usage
@@ -75,8 +75,8 @@ This example reads all frames from a TIFF file:
 							///////////////////////////////////////////////////////////////////
 							// HERE WE CAN DO SOMETHING WITH THE SAMPLE FROM THE IMAGE 
 							// IN image (ROW-MAJOR!)
-							// Note: That you may have to typecast the array image to the
-							// datatype used in the TIFF-file. You can get the size of each
+							// Note: You may have to typecast the array image to the
+							// datatype used in the TIFF file. You can get the size of each
 							// sample in bits by calling TinyTIFFReader_getBitsPerSample() and
 							// the datatype by calling TinyTIFFReader_getSampleFormat().
 							///////////////////////////////////////////////////////////////////
@@ -109,7 +109,7 @@ This simplified example reads the first sample from the first frame in a TIFF fi
 							///////////////////////////////////////////////////////////////////
 							// HERE WE CAN DO SOMETHING WITH THE SAMPLE FROM THE IMAGE 
 							// IN image (ROW-MAJOR!)
-							// Note: That you may have to typecast the array image to the
+							// Note: You may have to typecast the array image to the
 							// datatype used in the TIFF-file. You can get the size of each
 							// sample in bits by calling TinyTIFFReader_getBitsPerSample() and
 							// the datatype by calling TinyTIFFReader_getSampleFormat().
@@ -124,19 +124,19 @@ This simplified example reads the first sample from the first frame in a TIFF fi
 
 ## Basics 
 
-This library currently creates TIFF files, which meet the following criteria:
-* TIFF-only (no BigTIFF), i.e. max. 4GB
-* multiple frames per file (actually this is the scope of this lib, to write such multi-page files fast), but with the limitation that all frames have the same dimension, data-type and number of samples. The latter allows for the desired speed optimizations!
+This library currently creates TIFF files which meet the following criteria:
+* TIFF only (no BigTIFF), i.e. max. 4GB
+* multiple frames per file (actually this is the scope of this library—to write such multi-page files fast), but with the limitation that all frames have the same dimension, data type and number of samples. The latter allows for the desired speed optimizations.
 * uncompressed frames
 * one sample per frame
-* data types: UINT, INT, FLOAT, 8-64-bit
-* photometric interpretations: Greyscale, RGB, including ALPHA information
-* planar (R1R2R3...G1G2G3...B1B2B3...) or chunky (R1G1B1R2G2B2R3G3B3...) data organization for
+* data types: UINT, INT, FLOAT, 8-, 16-, 32-, or 64-bit
+* photometric interpretations: Greyscale, RGB, including alpha information
+* planar (R1R2R3...G1G2G3...B1B2B3...) or chunky (R1G1B1R2G2B2R3G3B3...) data organization
 * writes stripped TIFFs only, no tiled TIFFs
 
 ## Usage
 
-The methods in this file allow to write TIFF files with limited capabilites,  but very fast. Usually writing TIFF files with a library like libTIFF is relatively slow, when multiple images are written into a single file. The methods in this files overcome this problem by implementing a tiny writer lib that allows to write a TIFF file where all images have the same properties (size, bit depth, ...). This is a situation thet occurs e.g. in cases where a camera acquires a video that should be saved as TIFF file. The library works like this (write 50 32x32 pixel 8-bit images:
+The methods in this library allow to write TIFF files with limited capabilites, but very fast. Usually writing TIFF files with a library like libTIFF is relatively slow when multiple images are written into a single file. The methods in this library overcome this problem by implementing a tiny writer library that allows to write a TIFF file where all images have the same properties (size, bit depth, ...). This is a situation thet occurs e.g. in cases where a camera acquires a video that should be saved as TIFF file. The library works like this (write 50 32x32 pixel 8-bit images):
 ```C++
    TinyTIFFWriterFile* tif=TinyTIFFWriter_open("myfil.tif", 8, 1, 32, 32, TinyTIFFWriter_Greyscale);
    if (tif) {
@@ -149,11 +149,11 @@ The methods in this file allow to write TIFF files with limited capabilites,  bu
 ```
 
 
-The images are written in big- or little-endian according to your system. The TIFF header is set accordingly, so we do not need to shuffle around bytes when writing, but the created TIFF file may differ from hardware system to hardware system, although the same data is written (once in little-endian, once in big-endian). Currently this library saves all images as unsigned int, but with given bit-depth (8, 16, 32 or 64). Also this library explicitly writes a resolution of 1 in both directions.
+The images are written in big- or little-endian according to your system. The TIFF header is set accordingly, so we do not need to shuffle around bytes when writing, but the created TIFF file may differ from hardware system to hardware system, although the same data is written (once in little-endian, once in big-endian). Currently this library saves all images as unsigned int but with the given bit-depth (8, 16, 32 or 64). Also this library explicitly writes a resolution of 1 in both directions.
 
 ## Multi-Sample Images
 
-You can also store multi-sample images. Their interpretation has to be specified in the call to `TinyTIFFWriter_open()`, e.g. for an RGB-image, use:
+You can also store multi-sample images. Their interpretation has to be specified in the call to `TinyTIFFWriter_open()`, e.g. for an RGB image, use:
 ```C++
    TinyTIFFWriterFile* tif=TinyTIFFWriter_open("myfil.tif", 8, 3, 32, 32, TinyTIFFWriter_RGB);
    if (tif) {
@@ -165,42 +165,42 @@ You can also store multi-sample images. Their interpretation has to be specified
    }
 ```
 
-Note, that `TinyTIFFWriter_writeImage()` expects the image data in the given buff `data` is given in interleaved order, i.e. `R1G1B1R2G2B2R3G3B3...` and writes it out in the same order.
-If you specify more or less samples, the same rules apply. You can use the extended method `TinyTIFFWriter_writeImageMultiSample()` if your data is not in chunky format, or you want
-to write the data out in planar form, instead of chunky (e.g. to make the data readable by TinyTIFFReader.
+Note that `TinyTIFFWriter_writeImage()` expects that the image data in the given buffer `data` is given in interleaved order, i.e. `R1G1B1R2G2B2R3G3B3...` and writes it out in the same order.
+If you specify more or fewer samples, the same rules apply. You can use the extended method `TinyTIFFWriter_writeImageMultiSample()` if your data is not in chunky format or if you want
+to write the data out in planar form instead of chunky (e.g. to make the data readable by `TinyTIFFReader`).
 
-Also it is possibly to specify that one of the extra channels ahall be used as ALPHA information. then you need to call `TinyTIFFWriter_open(..., TinyTIFFWriter_RGBA)` or `TinyTIFFWriter_open(..., TinyTIFFWriter_GreyscaleAndAlpha)`. All samples additional to the ones covered by the interpretation flag are treated as extraSamples with unspecified type (see TIFF specification for details).
+Also it is possible to specify that one of the extra channels shall be used as alpha information. Then you need to call `TinyTIFFWriter_open(..., TinyTIFFWriter_RGBA)` or `TinyTIFFWriter_open(..., TinyTIFFWriter_GreyscaleAndAlpha)`. All samples additional to the ones covered by the interpretation flag are treated as extraSamples with unspecified type. (See TIFF specification for details.)
 
 ## Internal Workings
 
-Internally this library works like this: TinyTIFFWriter_open() will basically only initialize the internal datastructures and write the TIFF header. It also determines the byte order used by the system and sets the TIFF header acordingly. As the image size is known, the size of every image in the file can be predetermined (we assume a maximum number of TIFF directory entries). The size will be: 
+Internally this library works like this: `TinyTIFFWriter_open()` will only initialize the internal data structures and write the TIFF header. It also determines the byte order used by the system and sets the TIFF header accordingly. As the image size is known, the size of every image in the file can be predetermined. (We assume a maximum number of TIFF directory entries.) The size will be:
 ```
       MAX_HEADER_ENTRIES*12 + SOME_FREE_SPACE + WIDTH*HEIGHT*SAMPLES(BITS_PER_SAMPLES/8)
       ---------------------------------------   ----------------------------------------
           directory/image description data                 image data
 ```
-The free space, indicated as SOME_FREE_SPACE is used to store contents of extended fields, like RATIONAL or ARRAY fields. Every image in the file will have this size and unused bytes are set to 0x00. TinyTIFFWriter_writeImage() then works like this: The image description data is first assembled in memory, then the complete image description data and the complete image data is written to the file all together. This reduces the number of file access operations and writes the data in two reltively large chunks which allows the operating system to properly optimize file access. Finally this method will save the position of the  NEXT_IFD_OFFSET field in the image header. The  NEXT_IFD_OFFSET field is filled with the adress of the next potential image. Finally the method TinyTIFFWriter_close() will write  0x00000000 into the NEXT_IFD_OFFSET of the last image (as saved above) which ends the list of images in the file. This ansatz for writing TIFF files is only about a factor of 2 slower than directly writing binary data into a file. In addition the time needed to write an image stays equal also when writing many images, which is NOT the case for libtiff. 
+The free space, indicated as `SOME_FREE_SPACE`, is used to store the contents of extended fields, like `RATIONAL` or `ARRAY` fields. Every image in the file will have this size and unused bytes are set to 0x00. `TinyTIFFWriter_writeImage()` then works like this: The image description data is first assembled in memory, then the complete image description data and the complete image data is written to the file all together. This reduces the number of file access operations and writes the data in two relatively large chunks which allows the operating system to properly optimize file access. Finally this method will save the position of the `NEXT_IFD_OFFSET` field in the image header. The `NEXT_IFD_OFFSET` field is filled with the address of the next potential image. Finally the method `TinyTIFFWriter_close()` will write 0x00000000 into the `NEXT_IFD_OFFSET` of the last image (as saved above) which ends the list of images in the file. This approach for writing TIFF files is only about a factor of 2 slower than directly writing binary data into a file. In addition the time needed to write an image stays equal also when writing many images, which is NOT the case for libTIFF. 
 
-## PErformance Measurement
+## Performance Measurement
 
-The library was developed due to a problem with libTIFF, when a lot (>1000) frames are written into a TIFF-file. LibTIFF does not need constant time per frame (i.e. the time to write a multi-frame TIFF grows linearly with the number of frames), but the time to write a frame increases with the number of frames.
-The following performance measurement shows this. It was acquired using `tinytiffwriter_speedtest` from this repository and shows the average time required to write one frame (64x64x pixels, 16-bit integer) out of a number (10, 100, 1000, ...) of frames. It compares the performance of libTIFF, TinyTIFFWriter and simply writing the dtaa using `fwrite()` ("RAW"). It was acquired on an Ryzen 5 3600+, Win10, 32-bit Release-build, writing onto a Harddisk (not a SSD)
+The library was developed due to a problem with libTIFF when a lot of frames (>1000) are written into a TIFF file. LibTIFF does not need constant time per frame (i.e. the time to write a multi-frame TIFF grows linearly with the number of frames), but the time to write a frame increases with the number of frames.
+The following performance measurement shows this. It was acquired using `tinytiffwriter_speedtest` from this repository and shows the average time required to write one frame (64x64 pixels, 16-bit integer) out of a number (10, 100, 1000, ...) of frames. It compares the performance of libTIFF, TinyTIFFWriter and simply writing the data using `fwrite()` ("RAW"). It was acquired on a Ryzen 5 3600+, Windows 10, 32-bit Release-build, writing onto a hard disk (not an SSD).
 
 ![](https://raw.githubusercontent.com/jkriege2/TinyTIFF/master/doc/images/tinytiffwriter_libtiff_raw_comparison_numimages.png)
 
-For a microscope developed during my PhD thesis, it was necessary to write 100000 frames and more with acceptable duration. Therefore libTIFF was unusable and TinyTIFFWriter was developed.
-As can be seen in the graph above. The performance of TinyTIFFWriter and `fwrite()`/RAW is comparable, whereas the performance of LibTIFF falls off towards large files.
+For a microscope developed during my PhD thesis, it was necessary to write 100,000 frames and more with acceptable duration. Therefore libTIFF was unusable and TinyTIFFWriter was developed.
+As can be seen in the graph above, the performance of TinyTIFFWriter and `fwrite()`/RAW is comparable, whereas the performance of libTIFF falls off as file sizes increase.
 
 
-The following image shows another performance measurement, this time for different frame sizes (64x64-4096x4096, acquired on an Ryzen 5 3600+, Win10, 32-bit Release-build, writing onto a Harddisk (not a SSD)):
+The following image shows another performance measurement, this time for different frame sizes (64x64-4096x4096), acquired on a Ryzen 5 3600+, Windows 10, 32-bit Release-build, writing onto a hard disk (not an SSD):
 
 ![](https://raw.githubusercontent.com/jkriege2/TinyTIFF/master/doc/images/tinytiffwriter_libtiff_raw_comparison_imagesizes.png)
 
-This suggests that the performance of TinyTIFFWriter and `fwrite()` are comparable for all image sizes. For larger images, also the performance of libTIFF is in the same range, whereas for small images, libTIFF falls off somewhat.  
+This suggests that the performance of TinyTIFFWriter and `fwrite()` are comparable for all image sizes. For larger images, the performance of libTIFF is also in the same range, whereas for small images, libTIFF's performance falls off somewhat.  
 
 # Documentation
 
-* library docukentation: https://travis-ci.org/jkriege2/TinyTIFF
+* library documentation: https://travis-ci.org/jkriege2/TinyTIFF
 * API documentation: http://jkriege2.github.io/TinyTIFF/modules.html
 * build instructions: http://jkriege2.github.io/TinyTIFF/page_buildinstructions.html
 * usage instructions: http://jkriege2.github.io/TinyTIFF/page_useinstructions.html
